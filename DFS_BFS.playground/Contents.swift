@@ -18,8 +18,6 @@ public class TreeNode {
 class Solution {
     var dfsReturnArray:[Int] = [Int]()
     
-    
-    
     func dfs_recursion(_ root: TreeNode?){
         guard root != nil else { return }
         print(root!.val) // PreOrder
@@ -118,21 +116,7 @@ class Solution {
         }
         // flatten.append(root.val) #PostOrder
     }
-}
 
-let solution = Solution()
-let treeNode = solution.createTree(from: [80,50,90,10,60,30,70,55,5,35,85,1,3,12,4,2,6])
-let smallTree = solution.createTree(from: [60,55,70])
-
-print(treeNode!.asString,"\n\n")
-print("DFS: ", solution.dfs(treeNode))
-print("BFS: ", solution.bfs(treeNode))
-solution.isNodeInTree(smallTree!, treeNode)
-
-solution.isValidBST(treeNode)
-
-
-extension Solution{
     func insertToTree(_ node:TreeNode,_ root:TreeNode){
         if root.val > node.val {
             if root.left == nil{
@@ -151,9 +135,7 @@ extension Solution{
     
     func createTree(from arr:[Int]) -> TreeNode?{
         guard !arr.isEmpty else { return nil }
-        
         var root:TreeNode?
-        
         for n in arr{
             if root == nil {
                 root = TreeNode(n)
@@ -165,7 +147,79 @@ extension Solution{
         // print(root!.asString)
         return root
     }
+    func createTreeFromLevelOrder(_ array:[Int?])->TreeNode?{
+        guard !array.isEmpty else { return nil }
+        var arr = array
+        var queue:[TreeNode?] = [TreeNode?]()
+        
+        let rootNode = TreeNode(arr.removeFirst()!)
+        queue.append(rootNode)
+        
+        while !queue.isEmpty && !arr.isEmpty {
+            let currRoot = queue.removeFirst()
+            
+            if let left = arr.removeFirst(){
+                let leftNode = TreeNode(left)
+                currRoot?.left = leftNode
+                queue.append(leftNode)
+            }
+            if let right = arr.removeFirst(){
+                let rightNode = TreeNode(right)
+                currRoot?.right = rightNode
+                queue.append(rightNode)
+            }
+        }
+        return rootNode
+    }
 }
+
+
+
+
+
+
+let solution = Solution()
+let treeNode = solution.createTree(from: [80,50,90,10,60,30,70,55,5,35,85,1,3,12,4,2,6])
+let smallTree = solution.createTree(from: [60,55,70])
+
+print(treeNode!.asString,"\n\n")
+print("DFS: ", solution.dfs(treeNode))
+print("BFS: ", solution.bfs(treeNode))
+solution.isNodeInTree(smallTree!, treeNode)
+solution.isValidBST(treeNode)
+print(solution.createTreeFromLevelOrder([2,nil,3,nil,4,nil,5,nil,6])!.asString,"\n\n")
+print(solution.createTreeFromLevelOrder([3,9,20,nil,nil,15,7])!.asString,"\n\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
