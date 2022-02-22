@@ -188,7 +188,7 @@ print("BFS: ", solution.bfs(treeNode))
 solution.isNodeInTree(smallTree!, treeNode)
 solution.isValidBST(treeNode)
 print(solution.createTreeFromLevelOrder([2,nil,3,nil,4,nil,5,nil,6])!.asString,"\n\n")
-print(solution.createTreeFromLevelOrder([3,9,20,nil,nil,15,7])!.asString,"\n\n")
+print(solution.createTreeFromLevelOrder([3,9,20,1,nil,15,7])!.asString,"\n\n")
 
 
 
