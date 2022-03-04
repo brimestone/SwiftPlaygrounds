@@ -1,5 +1,4 @@
 import UIKit
-import Darwin
 
 public class TreeNode {
     public var val: Int
@@ -146,66 +145,6 @@ extension TreeNode {
 }
 
 class Solution {
-    var dfsReturnArray:[Int] = [Int]()
-    
-    func dfs_recursion(_ root: TreeNode?){
-        guard root != nil else { return }
-        print(root!.val) // PreOrder
-        dfs(root?.left)
-        //print(root!.val) // InOrder
-        dfs(root?.right)
-        //print(root!.val) // PostOrder
-    }
-    
-    func isNodeInTree(_ node:TreeNode,_ tree:TreeNode?)->Bool{
-        guard tree != nil else { return false }
-        var queue:[TreeNode] = [TreeNode]()
-        
-        let nodeString = String("\(node.val)\(node.left != nil ? String(node.left!.val) : "")\(node.right != nil  ? String(node.right!.val): "")")
-        
-        queue.append(tree!)
-        while !queue.isEmpty {
-            var currNodeString:String = String()
-            let currNode = queue.removeFirst()
-            currNodeString.append("\(String(currNode.val))")
-            if let leftChild = currNode.left {
-                queue.append(leftChild)
-                currNodeString.append(String(leftChild.val))
-            }
-            if let rightChild = currNode.right {
-                queue.append(rightChild)
-                currNodeString.append(String(rightChild.val))
-            }
-            if nodeString == currNodeString {
-                return true
-            }
-        }
-        return false
-    }
-    func isValidBST(_ root: TreeNode?) -> Bool {
-        guard root != nil else { return true }
-        var flatten:[Int] = [Int]()
-        validBST(root!, &flatten)
-        print(flatten)
-        for n in 1..<flatten.count{
-            if flatten[n] <= flatten[n-1]{
-                return false
-            }
-        }
-        return true
-    }
-    private func validBST(_ root:TreeNode,_ flatten:inout [Int]){
-        // flatten.append(root.val) #PreOrder
-        if let leftNode = root.left {
-            validBST(leftNode, &flatten)
-        }
-        flatten.append(root.val)
-        if let rightNode = root.right {
-            validBST(rightNode, &flatten)
-        }
-        // flatten.append(root.val) #PostOrder
-    }
-    
     func insertToTree(_ node:TreeNode,_ root:TreeNode){
         if root.val > node.val {
             if root.left == nil{
@@ -221,7 +160,6 @@ class Solution {
             }
         }
     }
-    
     func createTree(from arr:[Int]) -> TreeNode?{
         guard !arr.isEmpty else { return nil }
         var root:TreeNode?
@@ -233,80 +171,37 @@ class Solution {
                 insertToTree(newNode, root!)
             }
         }
-        // print(root!.asString)
         return root
     }
-    func createTreeFromLevelOrder(_ array:[Int?])->TreeNode?{
-        guard !array.isEmpty else { return nil }
-        var arr = array
-        var queue:[TreeNode?] = [TreeNode?]()
-        
-        let rootNode = TreeNode(arr.removeFirst()!)
-        queue.append(rootNode)
-        
-        while !queue.isEmpty && !arr.isEmpty {
-            let currRoot = queue.removeFirst()
-            
-            if let left = arr.removeFirst(){
-                let leftNode = TreeNode(left)
-                currRoot?.left = leftNode
-                queue.append(leftNode)
-            }
-            if let right = arr.removeFirst(){
-                let rightNode = TreeNode(right)
-                currRoot?.right = rightNode
-                queue.append(rightNode)
-            }
-        }
-        return rootNode
-    }
     
-    
-    
-    func dfs(_ root: TreeNode?) -> [Int]{
+    func showLeftViewOf(_ root:TreeNode?)->[Int]{
         guard root != nil else { return [] }
-        var resultArray:[Int] = [Int]()
-        
-        var stack:[TreeNode] = [TreeNode]()
-        stack.append(root!)
-        
-        while !stack.isEmpty{
-            let node = stack.removeLast()
-            resultArray.append(node.val)
-            if let childNode = node.right{
-                stack.append(childNode)
-            }
-            if let childNode = node.left{
-                stack.append(childNode)
-            }
-        }
-        return resultArray
-    }
-    
-    
-    func bfs(_ root: TreeNode?)-> [Int] {
-        guard root != nil else { return [] }
-        var resultArray:[Int] = [Int]()
-        
+        var visibleNodes:[Int] = [Int]()
         var queue:[TreeNode] = [TreeNode]()
-        
         queue.append(root!)
         
-        while !queue.isEmpty {
-            let node = queue.removeFirst()
-            resultArray.append(node.val)
-            if let childNode = node.left{
-                queue.append(childNode)
-            }
-            if let childNode = node.right{
-                queue.append(childNode)
+        while !queue.isEmpty{
+            let size = queue.count
+            
+            for i in 0..<size{
+                let node = queue.removeFirst()
+                if i == 0{
+                    visibleNodes.append(node.val)
+                }
+
+                if let left = node.left{
+                    queue.append(left)
+                }
+                
+                if let right = node.right{
+                    queue.append(right)
+                }
             }
         }
-        return resultArray
+        return visibleNodes.reversed()
     }
     
-
-    func showLeftViewOf(_ root:TreeNode?)->[Int]{
+    func showRightViewOf(_ root:TreeNode?)->[Int]{
         guard root != nil else { return [] }
         var visibleNodes:[Int] = [Int]()
         var queue:[TreeNode] = [TreeNode]()
@@ -333,29 +228,16 @@ class Solution {
         return visibleNodes
     }
     
-    func showRightViewOf(_ root:TreeNode?)->[Int]{
+    func perimeterOf(Tree root:TreeNode?)->[Int]{
         guard root != nil else { return [] }
         var visibleNodes:[Int] = [Int]()
-        var queue:[TreeNode] = [TreeNode]()
-        queue.append(root!)
         
-        while !queue.isEmpty{
-            let size = queue.count
-            
-            for i in 0..<size{
-                let node = queue.removeFirst()
-                if i == 0{
-                    visibleNodes.append(node.val)
-                }
-
-                if let left = node.left{
-                    queue.append(left)
-                }
-                
-                if let right = node.right{
-                    queue.append(right)
-                }
-            }
+        for n in self.showLeftViewOf(root){
+            visibleNodes.append(n)
+        }
+        visibleNodes.removeLast()
+        for n in self.showRightViewOf(root){
+            visibleNodes.append(n)
         }
         return visibleNodes
     }
@@ -363,60 +245,11 @@ class Solution {
 }
 
 
-
-
-
-
 let solution = Solution()
 let treeNode = solution.createTree(from: [80,50,90,10,60,30,70,55,5,35,85,1,3,12,4,2,6])
 let smallTree = solution.createTree(from: [80,50,90,10,60,30])
 
-
 print(treeNode!.asString,"\n\n")
-print("Right side view: ", solution.showRightViewOf(treeNode))
 print("Left side view: ", solution.showLeftViewOf(treeNode))
-//print("Out View: ", solution.showOuterNodesOfTree(treeNode))
-
-
-//print("DFS: ", solution.dfs(treeNode))
-//print("BFS: ", solution.bfs(treeNode))
-//solution.isNodeInTree(smallTree!, treeNode)
-//solution.isValidBST(treeNode)
-//print(solution.createTreeFromLevelOrder([2,nil,3,nil,4,nil,5,nil,6])!.asString,"\n\n")
-//print(solution.createTreeFromLevelOrder([3,9,20,1,nil,15,7])!.asString,"\n\n")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print("Right side view: ", solution.showRightViewOf(treeNode))
+print("Perimeter view: ", solution.perimeterOf(Tree: treeNode))
