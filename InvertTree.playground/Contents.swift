@@ -174,82 +174,25 @@ class Solution {
         return root
     }
     
-    func showLeftViewOf(_ root:TreeNode?)->[Int]{
-        guard root != nil else { return [] }
-        var visibleNodes:[Int] = [Int]()
-        var queue:[TreeNode] = [TreeNode]()
-        queue.append(root!)
-        
-        while !queue.isEmpty{
-            let size = queue.count
-            
-            for i in 0..<size{
-                let node = queue.removeFirst()
-                if i == 0{
-                    visibleNodes.append(node.val)
-                }
-
-                if let left = node.left{
-                    queue.append(left)
-                }
-                
-                if let right = node.right{
-                    queue.append(right)
-                }
-            }
-        }
-        return visibleNodes.reversed()
-    }
-    
-    func showRightViewOf(_ root:TreeNode?)->[Int]{
-        guard root != nil else { return [] }
-        var visibleNodes:[Int] = [Int]()
-        var queue:[TreeNode] = [TreeNode]()
-        queue.append(root!)
-        
-        while !queue.isEmpty{
-            let size = queue.count
-            
-            for i in 0..<size{
-                let node = queue.removeFirst()
-                if i == size - 1{
-                    visibleNodes.append(node.val)
-                }
-
-                if let left = node.left{
-                    queue.append(left)
-                }
-                
-                if let right = node.right{
-                    queue.append(right)
-                }
-            }
-        }
-        return visibleNodes
-    }
-    
-    func perimeterOf(Tree root:TreeNode?)->[Int]{
-        guard root != nil else { return [] }
-        var visibleNodes:[Int] = [Int]()
-        
-        for n in self.showLeftViewOf(root){
-            visibleNodes.append(n)
-        }
-        visibleNodes.removeLast()
-        for n in self.showRightViewOf(root){
-            visibleNodes.append(n)
-        }
-        return visibleNodes
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        guard root != nil else { return nil }
+        let right = root?.right
+        let left  = root?.left
+        root?.right = left
+        root?.left = right
+        invertTree(root?.right)
+        invertTree(root?.left)
+        return root
     }
     
 }
 
 
 let solution = Solution()
-let treeNode = solution.createTree(from: [80,50,90,10,60,30,70,55,5,35,85,1,3,12,4,2,6])
-let smallTree = solution.createTree(from: [80,50,90,10,60,30])
+let tree = solution.createTree(from: [2,1,3])
+print(tree!.asString)
 
-print(treeNode!.asString,"\n\n")
-print("Left side view: ", solution.showLeftViewOf(treeNode), "----- Right side view: ", solution.showRightViewOf(treeNode))
+let tree2 = solution.invertTree(tree)
+print(tree2!.asString)
 
-print("\n\nPerimeter view: ", solution.perimeterOf(Tree: treeNode))
+
