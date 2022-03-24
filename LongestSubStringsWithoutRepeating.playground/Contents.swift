@@ -85,7 +85,7 @@ solution.lengthOfLongestSubstring("au") // 2
 solution.lengthOfLongestSubstring("dvdf") // 3
 solution.lengthOfLongestSubstring("pwwkew") // 3
 
-
+ 
 
 // [ d, v, d, f ]
 //      L     R
