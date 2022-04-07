@@ -27,10 +27,9 @@ class Solution {
 }
 
 let solution = Solution()
-
-solution.numRescueBoats([1,2], 3)  //1
-solution.numRescueBoats([3,2,2,1], 3)  //3
-solution.numRescueBoats([3,5,3,4], 5)  //4
+print(solution.numRescueBoats([1,2], 3))  //1
+print(solution.numRescueBoats([3,2,2,1], 3))  //3
+print(solution.numRescueBoats([3,5,3,4], 5) ) //4
 
 
 //[1, 2] 3
